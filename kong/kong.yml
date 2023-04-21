@@ -1,0 +1,23 @@
+_format_version: "2.1"
+
+services:
+  - name: test
+    url: http://service/api
+    routes:
+      - name: service-test-route
+        paths:
+          - /api/running
+
+consumers:
+  - username: lab-student
+
+plugins:
+  - name: rate-limiting
+    config:
+      minute: 10
+      limit_by: ip
+      policy: local
+
+  - name: bot-detection
+
+  - name: prometheus
