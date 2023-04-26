@@ -27,23 +27,46 @@ services:
   grafana:
     image: grafana/grafana:latest
     volumes:
-    - grafana-data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
     ports:
-    - 3000:3000
+      - 3000:3000
     networks:
-    - logging
+      - logging
 
   prometheus:
     image: prom/prometheus
     volumes:
-    - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
     ports:
-    - 9090:9090
+      - 9090:9090
     networks:
-    - logging
+      - logging
+
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - database
+
+  adminer:
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    ports:
+      - 8080:8080
+    networks:
+      - database
+    links:
+      - mysql
 
 volumes:
   grafana-data:
+  mysql-data:
 
 networks:
   logging:
+  database:
