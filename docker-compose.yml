@@ -29,7 +29,7 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
     ports:
-      - 3000:3000
+      - 3001:3000
     networks:
       - logging
 
@@ -58,6 +58,18 @@ services:
       ADMINER_DEFAULT_SERVER: mysql
     ports:
       - 8080:8080
+    networks:
+      - database
+    links:
+      - mysql
+
+  dbdriver:
+    container_name: dbdriver
+    build:
+      dockerfile: Dockerfile
+      context: ./DatabaseDriver
+    ports:
+      - 3000:3000
     networks:
       - database
     links:

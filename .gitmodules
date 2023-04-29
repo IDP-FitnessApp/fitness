@@ -1,0 +1,3 @@
+[submodule "DatabaseDriver"]
+	path = DatabaseDriver
+	url = git@github.com:IDP-FitnessApp/DatabaseDriver.git
