@@ -1,3 +1,6 @@
 [submodule "DatabaseDriver"]
 	path = DatabaseDriver
 	url = git@github.com:IDP-FitnessApp/DatabaseDriver.git
+[submodule "AuthService"]
+	path = AuthService
+	url = git@github.com:IDP-FitnessApp/AuthService.git

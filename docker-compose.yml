@@ -21,17 +21,16 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
-    networks:
-      - logging
+    links:
+      - dbdriver
+      - authservice
 
   grafana:
     image: grafana/grafana:latest
     volumes:
       - grafana-data:/var/lib/grafana
     ports:
-      - 3001:3000
-    networks:
-      - logging
+      - 3002:3000
 
   prometheus:
     image: prom/prometheus
@@ -39,18 +38,15 @@ services:
       - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
-    networks:
-      - logging
 
   mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: idp_database
     volumes:
       - mysql-data:/var/lib/mysql
-    networks:
-      - database
 
   adminer:
     image: adminer
@@ -58,8 +54,6 @@ services:
       ADMINER_DEFAULT_SERVER: mysql
     ports:
       - 8080:8080
-    networks:
-      - database
     links:
       - mysql
 
@@ -68,17 +62,37 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./DatabaseDriver
+    volumes:
+      - ./DatabaseDriver/src:/app/src
+    command:
+      - npm
+      - run
+      - start:docker
     ports:
       - 3000:3000
-    networks:
-      - database
     links:
       - mysql
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+
+  authservice:
+    container_name: authservice
+    build:
+      dockerfile: Dockerfile
+      context: ./AuthService
+    environment:
+        FLASK_RUN_PORT: 3000
+    ports:
+      - 3001:3000
+    links:
+      - mongo
 
 volumes:
   grafana-data:
   mysql-data:
-
-networks:
-  logging:
-  database:
+  mongo-data:

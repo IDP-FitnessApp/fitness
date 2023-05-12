@@ -1,12 +1,20 @@
 _format_version: "2.1"
 
 services:
-  - name: test
-    url: http://service/api
+  - name: auth
+    path: "/"
+    url: http://authservice:3000
     routes:
-      - name: service-test-route
+      - name: authservice
         paths:
-          - /api/running
+          - /auth
+
+  - name: api
+    url: http://dbdriver:3000
+    routes:
+      - name: api
+        paths:
+          - /
 
 consumers:
   - username: lab-student
