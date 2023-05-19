@@ -71,10 +71,11 @@ services:
       - mysql
 
   dbdriver:
-    container_name: dbdriver
+    image: 127.0.0.1:5000/dbdriver
     build:
       dockerfile: Dockerfile
       context: ./DatabaseDriver
+    restart: always
     volumes:
       - ./DatabaseDriver/src:/app/src
     command:
@@ -97,10 +98,11 @@ services:
       - mongo-network
 
   authservice:
-    container_name: authservice
+    image: 127.0.0.1:5000/authservice
     build:
       dockerfile: Dockerfile
       context: ./AuthService
+    restart: always
     environment:
       FLASK_RUN_PORT: 3000
     networks:

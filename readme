@@ -1,0 +1,17 @@
+
+for local dev using compose:
+  make dev
+
+
+for swarm deploy:
+  docker swarm init
+  docker service create --name registry --publish published=5000,target=5000 registry:2
+  docker compose build
+  docker compose push
+  docker stack deploy --compose-file docker-compose.yml fitness
+
+
+cleanup swarm:
+  docker stack rm fitness
+  docker service rm registry
+  docker swarm leave --force
