@@ -47,6 +47,8 @@ services:
       - 9090:9090
     networks:
       - logs
+    links:
+        - kong
 
   mysql:
     image: mysql
